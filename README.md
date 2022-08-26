@@ -1,6 +1,6 @@
 # Samba file server configuration
 
-apt update && apt upgrade
+apt update
 
 apt install -y samba samba-client
 
