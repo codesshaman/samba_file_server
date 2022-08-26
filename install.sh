@@ -1,7 +1,6 @@
 #!/bin/bash
 apt update && apt install -y samba samba-client
-cp /etc/samba/smb.conf /etc/samba/smb.conf_backup
-rm /etc/samba/smb.conf
+mv /etc/samba/smb.conf /etc/samba/smb.conf_backup
 mkdir /media/samba
 mkdir /media/samba/public
 chmod -R 0755 /media/samba/public
