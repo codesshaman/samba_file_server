@@ -1,6 +1,5 @@
 #!/bin/bash
-apt update && apt upgrade
-apt install -y samba samba-client
+apt update && apt install -y samba samba-client
 cp /etc/samba/smb.conf /etc/samba/smb.conf_backup
 mkdir /media/samba
 mkdir /media/samba/public
