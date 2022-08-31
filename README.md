@@ -1,41 +1,69 @@
 # Samba file server configuration
 
-apt update
+> Run all from root
 
-apt install -y samba samba-client
+### Step 1. Install samba server
 
-cp /etc/samba/smb.conf /etc/samba/smb.conf_sample
+```apt update```
 
-mkdir /media/samba
+```apt install -y samba samba-client```
 
-mkdir /media/samba/public
+### Backup config
 
-chmod -R 0755 /media/samba/public
+```cp /etc/samba/smb.conf /etc/samba/smb.conf_default```
 
-mkdir /media/samba/private
+### Create user and folders
 
-groupadd smbgrp
+```adduser smbserv```
 
-useradd user1
+```mkdir /home/smbserv/smb```
 
-usermod -aG smbgrp user1
+```chown nobody:nogroup /home/smbserv/smb```
 
-chgrp smbgrp /media/samba/private
+```chmod a-w /home/smbserv/smb```
 
-smbpasswd -a user1
+```mkdir /home/smbserv/smb/files```
 
-nano /etc/samba/smb.conf
+```chown smbserv:smbserv /home/smbserv/smb/files```
 
-testparm -s
+```mkdir /home/smbserv/smb/files/samba```
 
-service smbd restart
+```mkdir /home/smbserv/smb/files/samba/public```
 
-iptables -A INPUT -p tcp -m tcp --dport 445 -s 10.0.0.0/24 -j ACCEPT
+```chmod -R 0755 /home/smbserv/smb/files/samba/public```
 
-iptables -A INPUT -p tcp -m tcp --dport 139 -s 10.0.0.0/24 -j ACCEPT
+```mkdir /home/smbserv/smb/files/private```
 
-iptables -A INPUT -p udp -m udp --dport 137 -s 10.0.0.0/24 -j ACCEPT
+```groupadd smbgrp```
 
-iptables -A INPUT -p udp -m udp --dport 138 -s 10.0.0.0/24 -j ACCEPT
+```usermod -aG smbgrp smbserv```
 
-iptables -L
+```chgrp smbgrp /home/smbserv/smb/files/samba/private```
+
+```smbpasswd -a smbserv```
+
+### Change samba config
+
+```nano /etc/samba/smb.conf```
+
+### Check changes
+
+```testparm -s```
+
+### Restart samba daemon
+
+```service smbd restart```
+
+### Open all ports
+
+```iptables -A INPUT -p tcp -m tcp --dport 445 -s 10.0.0.0/24 -j ACCEPT```
+
+```iptables -A INPUT -p tcp -m tcp --dport 139 -s 10.0.0.0/24 -j ACCEPT```
+
+```iptables -A INPUT -p udp -m udp --dport 137 -s 10.0.0.0/24 -j ACCEPT```
+
+```iptables -A INPUT -p udp -m udp --dport 138 -s 10.0.0.0/24 -j ACCEPT```
+
+### Check opened ports
+
+```iptables -L```
